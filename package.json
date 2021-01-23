@@ -17,6 +17,14 @@
   "author": "GitHub",
   "license": "CC0-1.0",
   "devDependencies": {
-    "electron": "^11.2.0"
+    "electron": "^11.2.0",
+    "ac-danmu": "^0.5.4",
+    "connect-history-api-fallback": "^1.6.0",
+    "cookie-parser": "~1.4.4",
+    "debug": "~2.6.9",
+    "express": "~4.16.1",
+    "express-fileupload": "^1.2.0",
+    "express-ws": "^4.0.0",
+    "http-errors": "~1.6.3"
   }
 }

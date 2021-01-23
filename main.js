@@ -1,7 +1,15 @@
+/*
+ * @Date: 2021-01-23 21:46:30
+ * @LastEditors: kanoyami
+ * @LastEditTime: 2021-01-23 22:00:55
+ */
 // Modules to control application life and create native browser window
 const {app, BrowserWindow} = require('electron')
 const path = require('path')
+const expressApp = require("./services/app")
+const __CONF__ = require("./config/config.json");
 
+expressApp.listen(__CONF__["serverPort"])
 function createWindow () {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
@@ -13,7 +21,7 @@ function createWindow () {
   })
 
   // and load the index.html of the app.
-  mainWindow.loadFile('index.html')
+  mainWindow.loadFile('./services/public/index.html')
 
   // Open the DevTools.
   // mainWindow.webContents.openDevTools()
