@@ -1,16 +1,16 @@
 /*
  * @Date: 2021-01-23 21:46:30
  * @LastEditors: kanoyami
- * @LastEditTime: 2021-01-23 22:00:55
+ * @LastEditTime: 2021-01-23 23:44:40
  */
 // Modules to control application life and create native browser window
-const {app, BrowserWindow} = require('electron')
+const { app, BrowserWindow, ipcMain } = require('electron')
 const path = require('path')
 const expressApp = require("./services/app")
 const __CONF__ = require("./config/config.json");
 
 expressApp.listen(__CONF__["serverPort"])
-function createWindow () {
+function createWindow() {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     width: 800,
@@ -21,10 +21,29 @@ function createWindow () {
   })
 
   // and load the index.html of the app.
-  mainWindow.loadFile('./services/public/index.html')
-
+  //   mainWindow.loadURL(`file://${__dirname}/frontend/dist/index.html`,{
+  //     hash: 'main'
+  // })
+  mainWindow.loadURL(`http://localhost:8080`)
+  mainWindow.webContents.openDevTools();
   // Open the DevTools.
   // mainWindow.webContents.openDevTools()
+
+  ipcMain.on('openView', (e, payload) => {
+    console.log("magic!it work!")
+    console.log(payload);
+    newwin = new BrowserWindow({
+      width: 500,
+      height: 800,
+      frame: true,
+      parent: mainWindow, //win是主窗口
+      // modal: true,
+      // show: false
+    })
+    newwin.loadURL(payload); //card.html是新开窗口的渲染进程
+    newwin.on('closed', () => { newwin = null })
+  }
+  );
 }
 
 // This method will be called when Electron has finished
@@ -32,7 +51,7 @@ function createWindow () {
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
   createWindow()
-  
+
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.

@@ -1,12 +1,13 @@
 /*
  * @Date: 2020-12-20 21:41:22
  * @LastEditors: kanoyami
- * @LastEditTime: 2021-01-23 22:09:21
+ * @LastEditTime: 2021-01-23 23:08:26
  */
 const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
+const history = require('connect-history-api-fallback');
 const index = require("./routes/index")
 const expressWs = require('express-ws');
 const fileUpload = require('express-fileupload')
@@ -29,12 +30,15 @@ app.use(fileUpload());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use("/", index);
+app.use("/helper", express.static(path.join(__dirname, 'help')));
+app.use(history());
 expressWs(app)
 app.ws('/chat', function (ws, req) {
   ws.setMaxListeners(255)
   ws.on('message', messageHandler.bind(ws))
 })
 app.use("/upload", express.static(__UPLOAD_FIFES__));
+app.use(express.static(path.join(__dirname, 'public')));
 
 
 

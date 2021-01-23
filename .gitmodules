@@ -1,0 +1,4 @@
+[submodule "aclivechat-ll"]
+	path = aclivechat-ll
+	url = https://github.com/kanoyami/aclivechat-ll.git
+	branch = electron
