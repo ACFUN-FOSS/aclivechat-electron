@@ -55,6 +55,14 @@ router.post('/sticker_upload', function (req, res, next) {
 });
 
 
+router.post('/css_upload', function (req, res, next) {
+  fs.writeFile(path.join(CONFIG_DIR, "dd.css"), req.body.cssPayload, function (err) {
+    if (err) return res.status(500).send(err);
+    res.json({ iRet: 0 })
+  })
+});
+
+
 router.get('/stickers_list', function (req, res, next) {
   fs.readdir(STICKERS_DIR, (err, files) => {
     if (!files) return res.json([])

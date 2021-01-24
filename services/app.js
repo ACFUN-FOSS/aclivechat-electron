@@ -1,7 +1,7 @@
 /*
  * @Date: 2020-12-20 21:41:22
  * @LastEditors: kanoyami
- * @LastEditTime: 2021-01-23 23:08:26
+ * @LastEditTime: 2021-01-24 03:15:10
  */
 const createError = require('http-errors');
 const express = require('express');
@@ -16,7 +16,6 @@ const init = require("./init")
 const __UPLOAD_FIFES__ = path.join(process.cwd(), "upload")
 //启动配置
 init.startup()
-
 const app = express();
 
 app.all('*', (req, res, next) => {

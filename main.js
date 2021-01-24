@@ -1,47 +1,80 @@
 /*
  * @Date: 2021-01-23 21:46:30
  * @LastEditors: kanoyami
- * @LastEditTime: 2021-01-23 23:44:40
+ * @LastEditTime: 2021-01-24 15:05:21
  */
 // Modules to control application life and create native browser window
-const { app, BrowserWindow, ipcMain } = require('electron')
+const { app, BrowserWindow, ipcMain ,Menu} = require('electron')
 const path = require('path')
 const expressApp = require("./services/app")
 const __CONF__ = require("./config/config.json");
-
+app.disableHardwareAcceleration()
 expressApp.listen(__CONF__["serverPort"])
+const prefix = "ll-aclivechat"
+const subWindows = []
 function createWindow() {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 1200,
+    height: 800,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js')
-    }
+    },
+    title: `${prefix} 令和`
   })
-
+  Menu.setApplicationMenu(null)
   // and load the index.html of the app.
   //   mainWindow.loadURL(`file://${__dirname}/frontend/dist/index.html`,{
   //     hash: 'main'
   // })
   mainWindow.loadURL(`http://localhost:8080`)
-  mainWindow.webContents.openDevTools();
+  //mainWindow.webContents.openDevTools();
   // Open the DevTools.
-  // mainWindow.webContents.openDevTools()
+   mainWindow.webContents.openDevTools()
 
-  ipcMain.on('openView', (e, payload) => {
-    console.log("magic!it work!")
-    console.log(payload);
-    newwin = new BrowserWindow({
-      width: 500,
-      height: 800,
-      frame: true,
-      parent: mainWindow, //win是主窗口
+  ipcMain.on("applyCss", (ref,event) => {
+    for (let index = 0; index < subWindows.length; index++) {
+      if (subWindows[index].__TYPE__ === event.type) {
+        subWindows[index].reload();
+        break;
+      }
+    }
+  })
+
+
+  ipcMain.on("lockView", (ref,event) => {
+    for (let index = 0; index < subWindows.length; index++) {
+      if (subWindows[index].__TYPE__ === event.type) {
+        subWindows[index].setIgnoreMouseEvents(event.option.locked);
+        break;
+      }
+    }
+  })
+
+  ipcMain.on("alwaysTop", (ref,event) => {
+    for (let index = 0; index < subWindows.length; index++) {
+      if (subWindows[index].__TYPE__ === event.type) {
+        subWindows[index].setAlwaysOnTop(event.option.alwaysTop);
+        break;
+      }
+    }
+  })
+
+  ipcMain.on('openView', (ref, events) => {
+    let newwin = new BrowserWindow({
+      width: Number(events.option.width),
+      height: Number(events.option.height),
+      transparent: true,
+      frame: false,
+      title: `${prefix} ${events.type}`
       // modal: true,
       // show: false
     })
-    newwin.loadURL(payload); //card.html是新开窗口的渲染进程
+    newwin.setAlwaysOnTop(events.option.alwaysTop)
+    newwin.__TYPE__ = events.type
+    newwin.loadURL(events.url); //
     newwin.on('closed', () => { newwin = null })
+    subWindows.push(newwin)
   }
   );
 }
