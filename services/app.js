@@ -1,7 +1,7 @@
 /*
  * @Date: 2020-12-20 21:41:22
  * @LastEditors: kanoyami
- * @LastEditTime: 2021-01-24 03:15:10
+ * @LastEditTime: 2021-01-24 17:35:45
  */
 const createError = require('http-errors');
 const express = require('express');
@@ -29,7 +29,6 @@ app.use(fileUpload());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use("/", index);
-app.use("/helper", express.static(path.join(__dirname, 'help')));
 app.use(history());
 expressWs(app)
 app.ws('/chat', function (ws, req) {
@@ -38,8 +37,6 @@ app.ws('/chat', function (ws, req) {
 })
 app.use("/upload", express.static(__UPLOAD_FIFES__));
 app.use(express.static(path.join(__dirname, 'public')));
-
-
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
@@ -61,7 +58,7 @@ app.use(function (err, req, res, next) {
 // app.listen(__PORT__);
 
 // console.log(`App start on ${__PORT__} of version ${__CONF__["version"]}` )
-// console.log("get high performance!")
+console.log("get high performance!")
 // console.log(`打开浏览器，进入http://localhost:${__PORT__}/`)
 // console.log("今天令荷在阳台。")
 // opn(`http://localhost:${__PORT__}/`)

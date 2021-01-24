@@ -1,10 +1,14 @@
 {
-  "name": "electron-quick-start",
+  "name": "ll-aclivechat",
   "version": "1.0.0",
-  "description": "A minimal Electron application",
+  "description": "Acfun livechat electron",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "dev": "cross-env NODE_ENV=development electron .",
+    "prod": "cross-env NODE_ENV=production electron .",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
   },
   "repository": "https://github.com/electron/electron-quick-start",
   "keywords": [
@@ -15,25 +19,49 @@
     "demo"
   ],
   "author": "GitHub",
-  "license": "CC0-1.0",
+  "license": "MIT",
   "dependencies": {
-    "electron": "^11.2.0",
     "ac-danmu": "^0.5.4",
+    "axios": "^0.19.0",
     "connect-history-api-fallback": "^1.6.0",
     "cookie-parser": "~1.4.4",
+    "core-js": "^2.6.5",
     "debug": "~2.6.9",
+    "downloadjs": "^1.4.7",
+    "element-ui": "^2.9.1",
     "express": "~4.16.1",
     "express-fileupload": "^1.2.0",
     "express-ws": "^4.0.0",
     "http-errors": "~1.6.3",
-    "axios": "^0.19.0",
-    "core-js": "^2.6.5",
-    "downloadjs": "^1.4.7",
-    "element-ui": "^2.9.1",
     "lodash": "^4.17.20",
     "vue": "^2.6.10",
     "vue-async-computed": "^3.9.0",
     "vue-i18n": "^8.11.2",
     "vue-router": "^3.0.6"
+  },
+  "build": {
+    "appId": "ll-aclivechat.kk.lh",
+    "mac": {
+      "category": "kk.ll-aclivechat.lh.app"
+    },
+    "win": {
+      "icon": "icon.ico"
+    },
+    "files": [
+      "public/",
+      "node_modules/",
+      "config/",
+      "package.json",
+      "main.js",
+      "services",
+      "renderer.js",
+      "preload.js",
+      "icon.ico"
+    ]
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3",
+    "electron": "^11.2.1",
+    "electron-builder": "^22.9.1"
   }
 }

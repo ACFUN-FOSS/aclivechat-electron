@@ -1,15 +1,18 @@
 /*
  * @Date: 2021-01-23 21:46:30
  * @LastEditors: kanoyami
- * @LastEditTime: 2021-01-24 15:05:21
+ * @LastEditTime: 2021-01-24 18:34:46
  */
 // Modules to control application life and create native browser window
-const { app, BrowserWindow, ipcMain ,Menu} = require('electron')
+const { app, BrowserWindow, ipcMain, Menu } = require('electron')
 const path = require('path')
 const expressApp = require("./services/app")
 const __CONF__ = require("./config/config.json");
 app.disableHardwareAcceleration()
 expressApp.listen(__CONF__["serverPort"])
+const MAIN_URL = process.env.NODE_ENV === "development"
+  ? "localhost:8080"
+  : 'localhost:3378';
 const prefix = "ll-aclivechat"
 const subWindows = []
 function createWindow() {
@@ -20,30 +23,34 @@ function createWindow() {
     webPreferences: {
       preload: path.join(__dirname, 'preload.js')
     },
-    title: `${prefix} 令和`
+    title: `${prefix} 令和`,
+    icon: path.join(__dirname, 'icon.ico')
   })
   Menu.setApplicationMenu(null)
   // and load the index.html of the app.
   //   mainWindow.loadURL(`file://${__dirname}/frontend/dist/index.html`,{
   //     hash: 'main'
   // })
-  mainWindow.loadURL(`http://localhost:8080`)
+  // mainWindow.loadURL(`http://localhost:8080`)
+  mainWindow.loadURL(`http://${MAIN_URL}`)
   //mainWindow.webContents.openDevTools();
   // Open the DevTools.
-   mainWindow.webContents.openDevTools()
+  process.env.NODE_ENV === "development" ? mainWindow.webContents.openDevTools() : null
 
-  ipcMain.on("applyCss", (ref,event) => {
+  ipcMain.on("applyCss", (ref, event) => {
     for (let index = 0; index < subWindows.length; index++) {
+      if (!subWindows[index]) continue;
       if (subWindows[index].__TYPE__ === event.type) {
-        subWindows[index].reload();
+        subWindows[index].webContents.reloadIgnoringCache();
         break;
       }
     }
   })
 
 
-  ipcMain.on("lockView", (ref,event) => {
+  ipcMain.on("lockView", (ref, event) => {
     for (let index = 0; index < subWindows.length; index++) {
+      if (!subWindows[index]) continue;
       if (subWindows[index].__TYPE__ === event.type) {
         subWindows[index].setIgnoreMouseEvents(event.option.locked);
         break;
@@ -51,8 +58,9 @@ function createWindow() {
     }
   })
 
-  ipcMain.on("alwaysTop", (ref,event) => {
+  ipcMain.on("alwaysTop", (ref, event) => {
     for (let index = 0; index < subWindows.length; index++) {
+      if (!subWindows[index]) continue;
       if (subWindows[index].__TYPE__ === event.type) {
         subWindows[index].setAlwaysOnTop(event.option.alwaysTop);
         break;
@@ -73,7 +81,18 @@ function createWindow() {
     newwin.setAlwaysOnTop(events.option.alwaysTop)
     newwin.__TYPE__ = events.type
     newwin.loadURL(events.url); //
-    newwin.on('closed', () => { newwin = null })
+    newwin.on('closed', () => {
+
+      for (let index = 0; index < subWindows.length; index++) {
+        if (!subWindows[index]) continue;
+        if (subWindows[index].__TYPE__ === newwin.__TYPE__) {
+          console.log("deleted ",subWindows[index].__TYPE__);
+          delete subWindows[index]
+          break;
+        }
+      }
+
+    })
     subWindows.push(newwin)
   }
   );
