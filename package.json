@@ -8,7 +8,8 @@
     "dev": "cross-env NODE_ENV=development electron .",
     "prod": "cross-env NODE_ENV=production electron .",
     "pack": "electron-builder --dir",
-    "dist": "electron-builder"
+    "dist": "electron-builder",
+    "publish": "cd dist/win-unpacked &&  zip -r ll-aclivechat-latest.zip .  && scp ll-aclivechat-latest.zip root@139.186.70.87:/data/wwwroot/livesongs.sdrsks.com.cn && scp ../../config/config.json root@139.186.70.87:/home/versionCheckSvr/config"
   },
   "repository": "https://github.com/electron/electron-quick-start",
   "keywords": [
