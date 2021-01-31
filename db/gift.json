@@ -1,0 +1,24 @@
+{
+  "gifts": [
+    {
+      "id": "DDR91e3h",
+      "timestamp": 1612082937545,
+      "price": 0.0005,
+      "senderNickName": "溯霜",
+      "senderUid": 690810,
+      "type": "香蕉",
+      "roomId": 12961787,
+      "num": 5
+    },
+    {
+      "id": "0wHOdDrv",
+      "timestamp": 1612082966942,
+      "price": 1,
+      "senderNickName": "孤城千金",
+      "senderUid": 1464376,
+      "type": "好听",
+      "roomId": 12961787,
+      "num": 1
+    }
+  ]
+}

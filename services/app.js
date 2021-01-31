@@ -1,7 +1,7 @@
 /*
  * @Date: 2020-12-20 21:41:22
  * @LastEditors: kanoyami
- * @LastEditTime: 2021-01-24 17:35:45
+ * @LastEditTime: 2021-01-31 13:45:58
  */
 const createError = require('http-errors');
 const express = require('express');
@@ -14,6 +14,7 @@ const fileUpload = require('express-fileupload')
 const messageHandler = require("./handler/message");
 const init = require("./init")
 const __UPLOAD_FIFES__ = path.join(process.cwd(), "upload")
+const giftRouter = require("./routes/giftGraph")
 //启动配置
 init.startup()
 const app = express();
@@ -28,7 +29,9 @@ app.use(express.json());
 app.use(fileUpload());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+
 app.use("/", index);
+app.use("/gift", giftRouter)
 app.use(history());
 expressWs(app)
 app.ws('/chat', function (ws, req) {

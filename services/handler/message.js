@@ -84,6 +84,7 @@ async function MessageHandler(message) {
                 const retMsg = {
                     cmd: COMMAND_ADD_GIFT,
                     data: {
+                        roomId:this.roomId,
                         totalValue: gift.value,
                         giftName: gift.giftName,
                         num: gift.count,

@@ -1,13 +1,15 @@
 /*
  * @Date: 2021-01-23 21:46:30
  * @LastEditors: kanoyami
- * @LastEditTime: 2021-01-24 18:34:46
+ * @LastEditTime: 2021-01-31 16:46:25
  */
 // Modules to control application life and create native browser window
 const { app, BrowserWindow, ipcMain, Menu } = require('electron')
 const path = require('path')
 const expressApp = require("./services/app")
 const __CONF__ = require("./config/config.json");
+const gitfModel = require("./models/gitf")
+const gift  = require("./types/gift")
 app.disableHardwareAcceleration()
 expressApp.listen(__CONF__["serverPort"])
 const MAIN_URL = process.env.NODE_ENV === "development"
@@ -23,7 +25,7 @@ function createWindow() {
     webPreferences: {
       preload: path.join(__dirname, 'preload.js')
     },
-    title: `${prefix} 令和`,
+    title: `${prefix}`,
     icon: path.join(__dirname, 'icon.ico')
   })
   Menu.setApplicationMenu(null)
@@ -68,13 +70,23 @@ function createWindow() {
     }
   })
 
+
+  ipcMain.on("gift",(ref,event)=>{
+      const data= event.option.gift
+      const giftOne = gift(new Date().getTime(), data.roomId, data.totalValue / 10000, data.giftName, data.id, data.authorName,data.num)
+      gitfModel.insertOne(giftOne)
+  })
+
   ipcMain.on('openView', (ref, events) => {
     let newwin = new BrowserWindow({
       width: Number(events.option.width),
       height: Number(events.option.height),
       transparent: true,
       frame: false,
-      title: `${prefix} ${events.type}`
+      title: `${prefix} ${events.type}`,
+      webPreferences: {
+        preload: path.join(__dirname, 'preload.js')
+      },
       // modal: true,
       // show: false
     })

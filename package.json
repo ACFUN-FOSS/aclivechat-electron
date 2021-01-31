@@ -1,6 +1,6 @@
 {
   "name": "ll-aclivechat",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Acfun livechat electron",
   "main": "main.js",
   "scripts": {
@@ -11,13 +11,8 @@
     "dist": "electron-builder",
     "publish": "cd dist/win-unpacked &&  zip -r ll-aclivechat-latest.zip .  && scp ll-aclivechat-latest.zip root@139.186.70.87:/data/wwwroot/livesongs.sdrsks.com.cn && scp ../../config/config.json root@139.186.70.87:/home/versionCheckSvr/config"
   },
-  "repository": "https://github.com/electron/electron-quick-start",
   "keywords": [
-    "Electron",
-    "quick",
-    "start",
-    "tutorial",
-    "demo"
+    "Electron"
   ],
   "author": "GitHub",
   "license": "MIT",
@@ -35,10 +30,14 @@
     "express-ws": "^4.0.0",
     "http-errors": "~1.6.3",
     "lodash": "^4.17.20",
+    "lowdb": "^1.0.0",
+    "moment": "^2.29.1",
+    "nanoid": "^3.1.20",
     "vue": "^2.6.10",
     "vue-async-computed": "^3.9.0",
     "vue-i18n": "^8.11.2",
-    "vue-router": "^3.0.6"
+    "vue-router": "^3.0.6",
+    "xf-tts-socket": "^1.2.5"
   },
   "build": {
     "appId": "ll-aclivechat.kk.lh",
@@ -57,7 +56,10 @@
       "services",
       "renderer.js",
       "preload.js",
-      "icon.ico"
+      "icon.ico",
+      "models/",
+      "db/",
+      "types/"
     ]
   },
   "devDependencies": {
