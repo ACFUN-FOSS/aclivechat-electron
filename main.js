@@ -1,7 +1,7 @@
 /*
  * @Date: 2021-01-23 21:46:30
  * @LastEditors: kanoyami
- * @LastEditTime: 2021-01-31 16:46:25
+ * @LastEditTime: 2021-01-31 21:30:46
  */
 // Modules to control application life and create native browser window
 const { app, BrowserWindow, ipcMain, Menu } = require('electron')
@@ -81,7 +81,7 @@ function createWindow() {
     let newwin = new BrowserWindow({
       width: Number(events.option.width),
       height: Number(events.option.height),
-      transparent: true,
+      transparent: !events.option.cAcfunHelper,
       frame: false,
       title: `${prefix} ${events.type}`,
       webPreferences: {

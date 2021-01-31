@@ -1,18 +1,20 @@
 /*
  * @Date: 2021-01-31 13:18:23
  * @LastEditors: kanoyami
- * @LastEditTime: 2021-01-31 17:34:53
+ * @LastEditTime: 2021-01-31 21:02:55
  */
 var express = require('express');
 var router = express.Router();
 const gitfModel = require("../../models/gitf")
 const moment = require("moment")
 const ONE_DAY = 24 * 60 * 60 * 1000;
+
+
 /* GET home page. */
 //'w.Write([]byte(`{"version": " + BackendVersion + ", "config": {"enableTranslate":  + strconv.FormatBool(EnableTranslate) + }}))'
 router.get('/totalDaliy', function (req, res, next) {
-  const start = req.query.start ? new Date(new Date(req.query.start).toLocaleDateString()).getTime() : new Date(new Date().toLocaleDateString()).getTime();
-  const end = req.query.end ? new Date(new Date(req.query.end).toLocaleDateString()).getTime() + ONE_DAY - 1 : new Date(new Date().toLocaleDateString()).getTime() + ONE_DAY - 1
+  const start = req.query.start || new Date(new Date().toLocaleDateString()).getTime();
+  const end = req.query.end || new Date(new Date().toLocaleDateString()).getTime() + ONE_DAY - 1
   const daliyGift = gitfModel.daliyGiftByType(start, end, Number(req.query.roomId))
   res.json(daliyGift)
 });
@@ -34,8 +36,8 @@ router.get('/totalByDate', function (req, res, next) {
 });
 
 router.get('/all', function (req, res, next) {
-  let start = req.query.start ? new Date(new Date(req.query.start).toLocaleDateString()).getTime() : new Date(new Date().toLocaleDateString()).getTime();
-  const end = req.query.end ? new Date(new Date(req.query.end).toLocaleDateString()).getTime() + ONE_DAY - 1 : new Date(new Date().toLocaleDateString()).getTime() + ONE_DAY - 1
+  let start = req.query.start || new Date(new Date().toLocaleDateString()).getTime();
+  const end = req.query.end || new Date(new Date().toLocaleDateString()).getTime() + ONE_DAY - 1
   const result = gitfModel.findAllbetweenTimestampByRoomId(start, end, Number(req.query.roomId))
   res.json(result)
 });

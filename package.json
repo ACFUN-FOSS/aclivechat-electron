@@ -51,15 +51,15 @@
       "public/",
       "node_modules/",
       "config/",
+      "models/",
+      "db/",
+      "types/",
       "package.json",
       "main.js",
       "services",
       "renderer.js",
       "preload.js",
-      "icon.ico",
-      "models/",
-      "db/",
-      "types/"
+      "icon.ico"
     ]
   },
   "devDependencies": {
