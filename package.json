@@ -1,6 +1,6 @@
 {
   "name": "ll-aclivechat",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Acfun livechat electron",
   "main": "main.js",
   "scripts": {
@@ -33,6 +33,7 @@
     "lowdb": "^1.0.0",
     "moment": "^2.29.1",
     "nanoid": "^3.1.20",
+    "url": "^0.11.0",
     "vue": "^2.6.10",
     "vue-async-computed": "^3.9.0",
     "vue-i18n": "^8.11.2",
@@ -59,7 +60,8 @@
       "services",
       "renderer.js",
       "preload.js",
-      "icon.ico"
+      "icon.ico",
+      "index.html"
     ]
   },
   "devDependencies": {

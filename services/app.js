@@ -12,11 +12,9 @@ const index = require("./routes/index")
 const expressWs = require('express-ws');
 const fileUpload = require('express-fileupload')
 const messageHandler = require("./handler/message");
-const init = require("./init")
 const __UPLOAD_FIFES__ = path.join(process.cwd(), "upload")
 const giftRouter = require("./routes/giftGraph")
 //启动配置
-init.startup()
 const app = express();
 
 app.all('*', (req, res, next) => {

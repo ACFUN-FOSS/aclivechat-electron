@@ -1,23 +1,24 @@
 <!--
  * @Date: 2021-01-23 21:46:30
  * @LastEditors: kanoyami
- * @LastEditTime: 2021-01-24 00:38:49
+ * @LastEditTime: 2021-02-18 12:36:40
 -->
 <!DOCTYPE html>
-<html style="background: rgba(0,0,0,0);">
+<html>
   <head>
-    <meta charset="UTF-8">
-    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
-    <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">
-    <title>Hello World!</title>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="./style.css" />
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <!-- 重要：如果带referer则获取头像时会403 -->
+    <meta name="referrer" content="no-referrer" />
+    <title>Official</title>
   </head>
-  <body>
-    <h1>Hello World!</h1>
-    We are using Node.js <span id="node-version"></span>,
-    Chromium <span id="chrome-version"></span>,
-    and Electron <span id="electron-version"></span>.
-
+  <body style="-webkit-app-region: drag">
+    <div id="content">
+      <webview id="webview" src="about:blank"></webview>
+    </div>
     <!-- You can also require other files to run in this process -->
     <script src="./renderer.js"></script>
   </body>

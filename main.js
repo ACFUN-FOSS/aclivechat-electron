@@ -1,17 +1,20 @@
 /*
  * @Date: 2021-01-23 21:46:30
  * @LastEditors: kanoyami
- * @LastEditTime: 2021-01-31 21:30:46
+ * @LastEditTime: 2021-02-18 12:35:46
  */
 // Modules to control application life and create native browser window
 const { app, BrowserWindow, ipcMain, Menu } = require('electron')
+const url = require('url')
+const init = require("./services/init")
+init.startup()
 const path = require('path')
 const expressApp = require("./services/app")
 const __CONF__ = require("./config/config.json");
-const gitfModel = require("./models/gitf")
-const gift  = require("./types/gift")
 app.disableHardwareAcceleration()
 expressApp.listen(__CONF__["serverPort"])
+const gitfModel = require("./models/gitf")
+const gift = require("./types/gift")
 const MAIN_URL = process.env.NODE_ENV === "development"
   ? "localhost:8080"
   : 'localhost:3378';
@@ -49,7 +52,9 @@ function createWindow() {
     }
   })
 
-
+  ipcMain.on("ddd", () => {
+    console.log("ddd")
+  })
   ipcMain.on("lockView", (ref, event) => {
     for (let index = 0; index < subWindows.length; index++) {
       if (!subWindows[index]) continue;
@@ -71,34 +76,76 @@ function createWindow() {
   })
 
 
-  ipcMain.on("gift",(ref,event)=>{
-      const data= event.option.gift
-      const giftOne = gift(new Date().getTime(), data.roomId, data.totalValue / 10000, data.giftName, data.id, data.authorName,data.num)
-      gitfModel.insertOne(giftOne)
+  ipcMain.on("gift", (ref, event) => {
+    const data = event.option.gift
+    const giftOne = gift(new Date().getTime(), data.roomId, data.totalValue / 10000, data.giftName, data.id, data.authorName, data.num)
+    gitfModel.insertOne(giftOne)
   })
 
   ipcMain.on('openView', (ref, events) => {
-    let newwin = new BrowserWindow({
-      width: Number(events.option.width),
-      height: Number(events.option.height),
-      transparent: !events.option.cAcfunHelper,
-      frame: false,
-      title: `${prefix} ${events.type}`,
-      webPreferences: {
-        preload: path.join(__dirname, 'preload.js')
-      },
-      // modal: true,
-      // show: false
-    })
+    for (let index = 0; index < subWindows.length; index++) {
+      if (!subWindows[index]) continue;
+      if (subWindows[index].__TYPE__ === events.type) {
+        subWindows[index].close();
+        break;
+      }
+    }
+
+    let newwin = null;
+    if (events.option.isOfficial) {
+
+      newwin = new BrowserWindow({
+        width: Number(events.option.width+10),
+        height: Number(events.option.height+20),
+        transparent: !events.option.cAcfunHelper,
+        frame: false,
+        title: `${prefix} ${events.type}`,
+        webPreferences: {
+          webviewTag: true,
+          preload: path.join(__dirname, 'preload.js')
+        },
+        // modal: true,
+        // show: false
+      })
+      newwin.webContents.on('did-finish-load', function () {
+        newwin.webContents.send('targetURL', {
+          targetURL: events.url,
+          width: Number(events.option.width),
+          height: Number(events.option.height),
+          officialBackgroundColor:events.option.officialBackgroundColor
+        });
+      });
+    } else {
+      newwin = new BrowserWindow({
+        width: Number(events.option.width),
+        height: Number(events.option.height),
+        transparent: !events.option.cAcfunHelper,
+        frame: false,
+        title: `${prefix} ${events.type}`,
+        webPreferences: {
+          preload: path.join(__dirname, 'preload.js')
+        },
+        // modal: true,
+        // show: false
+      })
+    }
+
+
+   // process.env.NODE_ENV === "development" ? newwin.webContents.openDevTools() : null
     newwin.setAlwaysOnTop(events.option.alwaysTop)
     newwin.__TYPE__ = events.type
-    newwin.loadURL(events.url); //
+    if (events.option.isOfficial)
+      newwin.loadURL(url.format({
+        pathname: path.join(__dirname, 'index.html'),
+        protocol: 'file:',
+      }))
+    else
+      newwin.loadURL(events.url); //
     newwin.on('closed', () => {
 
       for (let index = 0; index < subWindows.length; index++) {
         if (!subWindows[index]) continue;
         if (subWindows[index].__TYPE__ === newwin.__TYPE__) {
-          console.log("deleted ",subWindows[index].__TYPE__);
           delete subWindows[index]
           break;
         }
